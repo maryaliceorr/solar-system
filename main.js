@@ -9,7 +9,10 @@ const planetCardBuilder = (planetArray) => {
         planetString += `<div class="planet-card">`;
         planetString += `<h2 class="planet-names">${planetArray[i].name}</h2>`;
         planetString += `<img class="planet-images hide" src="${planetArray[i].imageUrl}" alt"">`;
-        planetString += `</div>`;
+        planetString += `<p class="planet-descriptions hide">${planetArray[i].description}</p>`;
+        planetString += `<h3 class="planet-moon-amounts hide"><strong>Number of Moons: </strong>${planetArray[i].numberOfMoons}</h3>`;
+        planetString += `<h4 class="planet-largest-moon hide"><strong>Largest Moon: </strong>${planetArray[i].nameOfLargestMoon}</h4>`;
+        planetString += `</div>`
     }
     writeToDom(planetString, "planet-card-holder");
 };
@@ -19,7 +22,8 @@ function xhrCall () {
    const data = JSON.parse(this.responseText);
    planetCardBuilder(data.planets);
    nameDisappearListener();
-   imageAppearListener();
+   imageAppearListener()
+//    clickListener();
 };
 
 function doesNotWork() {
@@ -35,23 +39,31 @@ const startTheThing = () => {
 }
 
 
-//---------mouse over event listeners--------//
+//---------event listeners--------//
 
 const nameDisappearListener = () => {
 const planetImages = document.getElementsByClassName("planet-card");
-    for (let j=0; j<planetImages.length; j++) {
-        planetImages[j].addEventListener("mouseenter", makeNameAppear);
-        planetImages[j].addEventListener("mouseleave", makeNameDisappear);
+    for (let i=0; i<planetImages.length; i++) {
+        planetImages[i].addEventListener("mouseenter", makeNameAppear);
+        planetImages[i].addEventListener("mouseleave", makeNameDisappear);
     }
 }
 
 const imageAppearListener = () => {
     const planetImages = document.getElementsByClassName("planet-card");
-        for (let k=0; k<planetImages.length; k++) {
-            planetImages[k].addEventListener("mouseenter", makeImageAppear);
-            planetImages[k].addEventListener("mouseleave", makeImageDisappear);
+        for (let j=0; j<planetImages.length; j++) {
+            planetImages[j].addEventListener("mouseenter", makeImageAppear);
+            planetImages[j].addEventListener("mouseleave", makeImageDisappear);
         }
     }
+
+    // const clickListener = () => {
+    //     const planetImages = document.getElementsByClassName("planet-card");
+    //         for (let k=0; k<planetImages.length; k++) {
+    //             planetImages[k].addEventListener("click", makeInfoAppear);
+    //         }
+    //     }
+    
 
 //---------make appearance functions------//
 
@@ -75,8 +87,23 @@ const makeImageDisappear = (e) => {
     imageDisappear.classList.add("hide");
 }
 
+// const makeInfoAppear = (e) => {
+//     const infoAppear = e.target.children[2];
+//     infoAppear.classList.remove("hide");
+// }
+
+//----------------------//
+
+const clickListener = () => {
+        const planetImages = document.getElementsByClassName("planet-card");
+            for (let k=0; k<planetImages.length; k++) {
+                planetImages[k].addEventListener("click", makeInfoAppear);
+            }
+        }
+
 
 startTheThing();
 
 
 
+       
