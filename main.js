@@ -11,11 +11,8 @@ const planetCardBuilder = (planetArray) => {
         let planetString = "";
     for (let i=0; i<planetArray.length; i++) {
         planetString += `<div class="planet-card parent">`;
-        planetString += `<h2 class="planet-names child">${planetArray[i].name}</h2>`;
-        planetString += `<img class="planet-images hide child" src="${planetArray[i].imageUrl}" alt"">`;
-        planetString += `<p class="planet-descriptions hide child">${planetArray[i].description}</p>`;
-        planetString += `<h3 class="planet-moon-amounts hide child"><strong>Number of Moons: </strong>${planetArray[i].numberOfMoons}</h3>`;
-        planetString += `<h4 class="planet-largest-moon hide child"><strong>Largest Moon: </strong>${planetArray[i].nameOfLargestMoon}</h4>`;
+        planetString += `<h2 class="planet-names child1">${planetArray[i].name}</h2>`;
+        planetString += `<img class="planet-images hide child2" src="${planetArray[i].imageUrl}" alt"">`;
         planetString += `</div>`
     }
     writeToDom(planetString, "planet-card-holder");
@@ -72,9 +69,11 @@ const makeImageDisappear = (e) => {
 
 const makeBigCard = (e) => {
     if (e.target.classList.contains("parent")) {
-    const bigCard = e.target.parentNode.innerHTML;
-    } else { 
+     const bigCard = e.target.parentNode.innerHTML;
+    } else if (e.target.classList.contains("child1")) {
     const bigCard = e.target.parentNode.children[0].innerHTML;
+    } else {
+    const bigCard = e.target.parentNode.children[1].innerHTML;
     }
     let request = new XMLHttpRequest();
     request.addEventListener("load", newXhrCall);
@@ -94,17 +93,19 @@ const makeBigCard = (e) => {
     }
 }
 
+
+
 //-------BIG CARD STRING BUILDER----------//
 
 const bigCardBuilder = (planetArray) => {
     let planetString = "";
     for (let i=0; i<planetArray.length; i++) {
-        planetString += `<div class="planet-card">`;
-        planetString += `<h2 class="planet-names">${planetArray[i].name}</h2>`;
-        planetString += `<img class="planet-images hide" src="${planetArray[i].imageUrl}" alt"">`;
-        planetString += `<p class="planet-descriptions hide">${planetArray[i].description}</p>`;
-        planetString += `<h3 class="planet-moon-amounts hide"><strong>Number of Moons: </strong>${planetArray[i].numberOfMoons}</h3>`;
-        planetString += `<h4 class="planet-largest-moon hide"><strong>Largest Moon: </strong>${planetArray[i].nameOfLargestMoon}</h4>`;
+        planetString += `<div class="planet-card parent">`;
+        planetString += `<h2 class="planet-names child">${planetArray[i].name}</h2>`;
+        planetString += `<img class="planet-images hide child" src="${planetArray[i].imageUrl}" alt"">`;
+        planetString += `<p class="planet-descriptions hide child">${planetArray[i].description}</p>`;
+        planetString += `<h3 class="planet-moon-amounts hide child"><strong>Number of Moons: </strong>${planetArray[i].numberOfMoons}</h3>`;
+        planetString += `<h4 class="planet-largest-moon hide child"><strong>Largest Moon: </strong>${planetArray[i].nameOfLargestMoon}</h4>`;
         planetString += `</div>`
     }
     writeToDom(planetString, "big-card-holder");
