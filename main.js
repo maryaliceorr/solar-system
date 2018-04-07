@@ -1,31 +1,37 @@
 
+//----------WRITE TO DOM FUNCTION -------//
+
 const writeToDom = (string, id) => {
     document.getElementById(id).innerHTML = string;
 };
 
+//----------FIRST PLANET CARDBUILDER------//
+
 const planetCardBuilder = (planetArray) => {
         let planetString = "";
     for (let i=0; i<planetArray.length; i++) {
-        planetString += `<div class="planet-card">`;
-        planetString += `<h2 class="planet-names">${planetArray[i].name}</h2>`;
-        planetString += `<img class="planet-images hide" src="${planetArray[i].imageUrl}" alt"">`;
-        planetString += `<p class="planet-descriptions hide">${planetArray[i].description}</p>`;
-        planetString += `<h3 class="planet-moon-amounts hide"><strong>Number of Moons: </strong>${planetArray[i].numberOfMoons}</h3>`;
-        planetString += `<h4 class="planet-largest-moon hide"><strong>Largest Moon: </strong>${planetArray[i].nameOfLargestMoon}</h4>`;
+        planetString += `<div class="planet-card parent">`;
+        planetString += `<h2 class="planet-names child">${planetArray[i].name}</h2>`;
+        planetString += `<img class="planet-images hide child" src="${planetArray[i].imageUrl}" alt"">`;
+        planetString += `<p class="planet-descriptions hide child">${planetArray[i].description}</p>`;
+        planetString += `<h3 class="planet-moon-amounts hide child"><strong>Number of Moons: </strong>${planetArray[i].numberOfMoons}</h3>`;
+        planetString += `<h4 class="planet-largest-moon hide child"><strong>Largest Moon: </strong>${planetArray[i].nameOfLargestMoon}</h4>`;
         planetString += `</div>`
     }
     writeToDom(planetString, "planet-card-holder");
 };
  
 
+//----------ORIGINAL XHR CALL------------//
+
 function xhrCall () {
    const data = JSON.parse(this.responseText);
    planetCardBuilder(data.planets);
-   nameDisappearListener();
-   imageAppearListener()
-//    clickListener();
+   eventListener()
 };
 
+
+//------------
 function doesNotWork() {
     console.log("you failed at life");
 };
@@ -41,41 +47,14 @@ const startTheThing = () => {
 
 //---------event listeners--------//
 
-const nameDisappearListener = () => {
-const planetImages = document.getElementsByClassName("planet-card");
-    for (let i=0; i<planetImages.length; i++) {
-        planetImages[i].addEventListener("mouseenter", makeNameAppear);
-        planetImages[i].addEventListener("mouseleave", makeNameDisappear);
-    }
-}
-
-const imageAppearListener = () => {
+const eventListener = () => {
     const planetImages = document.getElementsByClassName("planet-card");
         for (let j=0; j<planetImages.length; j++) {
             planetImages[j].addEventListener("mouseenter", makeImageAppear);
             planetImages[j].addEventListener("mouseleave", makeImageDisappear);
+            planetImages[j].addEventListener("click", makeBigCard); 
         }
     }
-
-    // const clickListener = () => {
-    //     const planetImages = document.getElementsByClassName("planet-card");
-    //         for (let k=0; k<planetImages.length; k++) {
-    //             planetImages[k].addEventListener("click", makeInfoAppear);
-    //         }
-    //     }
-    
-
-//---------make appearance functions------//
-
-const makeNameAppear = (e) => {
-    const nameAppear = e.target.children[0];
-    nameAppear.classList.add("hide");
-}
-
-const makeNameDisappear = (e) => {
-    const nameDisappear = e.target.children[0];
-    nameDisappear.classList.remove("hide");
-}
 
 const makeImageAppear = (e) => {
     const imageAppear = e.target.children[1];
@@ -87,19 +66,50 @@ const makeImageDisappear = (e) => {
     imageDisappear.classList.add("hide");
 }
 
-// const makeInfoAppear = (e) => {
-//     const infoAppear = e.target.children[2];
-//     infoAppear.classList.remove("hide");
-// }
 
-//----------------------//
+//---------MAKE BIG CARD EVENT------//
 
-const clickListener = () => {
-        const planetImages = document.getElementsByClassName("planet-card");
-            for (let k=0; k<planetImages.length; k++) {
-                planetImages[k].addEventListener("click", makeInfoAppear);
-            }
+
+const makeBigCard = (e) => {
+    if (e.target.classList.contains("parent")) {
+    const bigCard = e.target.parentNode.innerHTML;
+    } else { 
+    const bigCard = e.target.parentNode.children[0].innerHTML;
+    }
+    let request = new XMLHttpRequest();
+    request.addEventListener("load", newXhrCall);
+    request.addEventListener("error", doesNotWork);
+    request.open("GET", "planets.json");
+    request.send();
+
+    function newXhrCall () {
+        const data = JSON.parse(this.responseText).planets;
+        for (let k=0; k<data.length; k++) {
+            if (data[k].name === bigCard) {
+                bigCardBuilder(data[k]);
+             } else {
+                 console.log("nope");
+                }   
         }
+    }
+}
+
+//-------BIG CARD STRING BUILDER----------//
+
+const bigCardBuilder = (planetArray) => {
+    let planetString = "";
+    for (let i=0; i<planetArray.length; i++) {
+        planetString += `<div class="planet-card">`;
+        planetString += `<h2 class="planet-names">${planetArray[i].name}</h2>`;
+        planetString += `<img class="planet-images hide" src="${planetArray[i].imageUrl}" alt"">`;
+        planetString += `<p class="planet-descriptions hide">${planetArray[i].description}</p>`;
+        planetString += `<h3 class="planet-moon-amounts hide"><strong>Number of Moons: </strong>${planetArray[i].numberOfMoons}</h3>`;
+        planetString += `<h4 class="planet-largest-moon hide"><strong>Largest Moon: </strong>${planetArray[i].nameOfLargestMoon}</h4>`;
+        planetString += `</div>`
+    }
+    writeToDom(planetString, "big-card-holder");
+}
+
 
 
 startTheThing();
