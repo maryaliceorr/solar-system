@@ -12,7 +12,7 @@ const planetCardBuilder = (planetArray) => {
     for (let i=0; i<planetArray.length; i++) {
         planetString += `<div class="planet-card parent">`;
         planetString += `<h2 class="planet-names child1">${planetArray[i].name}</h2>`;
-        planetString += `<img class="planet-images hide child2" src="${planetArray[i].imageUrl}" alt"">`;
+        planetString += `<img id="${planetArray[i].name}" class="planet-images hide child2" src="${planetArray[i].imageUrl}" alt"">`;
         planetString += `</div>`
     }
     writeToDom(planetString, "planet-card-holder");
@@ -24,7 +24,6 @@ const planetCardBuilder = (planetArray) => {
 function xhrCall () {
    const data = JSON.parse(this.responseText);
    planetCardBuilder(data.planets);
-
    eventListener()
 };
 
@@ -56,12 +55,16 @@ const eventListener = () => {
 
 const makeImageAppear = (e) => {
     const imageAppear = e.target.children[1];
+    const nameDisappear = e.target.children[0];
     imageAppear.classList.remove("hide");
+    nameDisappear.classList.add("hide");
 }
 
 const makeImageDisappear = (e) => {
     const imageDisappear = e.target.children[1];
+    const nameAppear = e.target.children[0];
     imageDisappear.classList.add("hide");
+    nameAppear.classList.remove("hide");
 }
 
 
@@ -69,14 +72,7 @@ const makeImageDisappear = (e) => {
 
 
 const makeBigCard = (e) => {
-    let bigCard = "";
-    if (e.target.classList.contains("parent")) {
-     const bigCard = e.target.parentNode.innerHTML;
-    } else if (e.target.classList.contains("child1")) {
-    const bigCard = e.target.parentNode.children[0].innerHTML;
-    } else {
-    const bigCard = e.target.parentNode.children[1].innerHTML;
-    }
+    let bigCard = e.target.id
     let request = new XMLHttpRequest();
     request.addEventListener("load", newXhrCall);
     request.addEventListener("error", doesNotWork);
@@ -88,7 +84,6 @@ const makeBigCard = (e) => {
         for (let k=0; k<data.length; k++) {
             if (data[k].name === bigCard) {
                 bigCardBuilder(data[k]);
-              
                 }      
         }
     }
@@ -100,24 +95,64 @@ const makeBigCard = (e) => {
 
 const bigCardBuilder = (planetObject) => {
     let planetString = "";
-    for (let m=0; m<planetObject.length; m++) {
-        planetString += `<div class="planet-card parent">`;
+        planetString += `<div class="big-card">`;
+        planetString += `<h3 id="close-x">X</h3>`;
         planetString += `<h2 class="planet-names child">${planetObject.name}</h2>`;
-        planetString += `<img class="planet-images hide child" src="${planetObject.imageUrl}" alt"">`;
-        planetString += `<p class="planet-descriptions hide child">${planetObject.description}</p>`;
-        planetString += `<h3 class="planet-moon-amounts hide child"><strong>Number of Moons: </strong>${planetObject.numberOfMoons}</h3>`;
-        planetString += `<h4 class="planet-largest-moon hide child"><strong>Largest Moon: </strong>${planetObject.nameOfLargestMoon}</h4>`;
+        planetString += `<img class="planet-images child" src="${planetObject.imageUrl}" alt"">`;
+        planetString += `<p class="planet-descriptions child">${planetObject.description}</p>`;
+        planetString += `<h3 class="planet-moon-amounts child"><strong>Number of Moons: </strong>${planetObject.numberOfMoons}</h3>`;
+        planetString += `<h4 class="planet-largest-moon child"><strong>Largest Moon: </strong>${planetObject.nameOfLargestMoon}</h4>`;
         planetString += `</div>`
-    }
-    writeToDom(planetString, "big-card-holder")
-    
+
+    writeToDom(planetString, "planet-card-holder");
+
+    const buttonClass = document.getElementById("close-x").addEventListener("click", startOver);
+}
+
+const startOver = () => {
+    startTheThing();
 }
 
 
+//---------SEARCH BAR-------------//
+
+const getSearchBarInput = () => {
+    const searchBarInput = document.getElementById("search").value;
+    findPlanets(searchBarInput);
+    }
+   
+
+const searchBarClick = () => {
+    const searchBarButton = document.getElementById("search-button");
+    searchBarButton.addEventListener("click", getSearchBarInput);
+}
+
+searchBarClick();
+
+const findPlanets = (input) => {
+  
+    let request = new XMLHttpRequest();
+    request.addEventListener("load", lastXhrCallIPromise);
+    request.addEventListener("error", doesNotWork);
+    request.open("GET", "planets.json");
+    request.send();
+
+    function lastXhrCallIPromise () {
+        const data = JSON.parse(this.responseText).planets;
+        let newPlanetArray = [];
+        for (let l=0; l<data.length; l++) {
+            if (data[l].name.includes(input)) {
+                newPlanetArray.push(data[l]);
+            } else if (data[l].description.includes(input)) {
+                newPlanetArray.push(data[l]);
+            }                       
+        }
+        planetCardBuilder(newPlanetArray);
+    }
+}
 
 
 startTheThing();
-
 
 
        

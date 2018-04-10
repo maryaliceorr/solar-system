@@ -1,6 +1,7 @@
 body {
     background-color: black;
     color: white;
+    font-family: 'Orbitron', sans-serif;
 }
 
 h1 {
@@ -50,9 +51,49 @@ h1 {
 .search-bar input{
   width: 500px;
   height: 30px;
+  font-size: 18px;
 }
-
 .hide {
     display: none;
+}
+
+.big-card {
+    width: 800px;
+    height: 1000px;
+    border: 4px solid white;
+    text-align: center;
+    margin: 20px;
+}
+
+.big-card p {
+    margin: 50px;
+    font-size: 18px;
+    line-height: 2;
+}  
+
+.big-card h2 {
+    font-size: 42px;
+}
+
+.big-card h3 {
+    font-size: 30px;
+}
+
+.big-card h4 {
+    font-size: 24px;
+}
+
+#close-x {
+    color: red;
+    text-align: right;
+    margin-right: 20px;
+    font-size: 36px;
+}
+
+#search-button {
+    font-size: 18px;
+    height: 36px;
+    background-color: gray;
+    color: white;
 }
 
