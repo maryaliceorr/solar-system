@@ -130,7 +130,6 @@ const searchBarClick = () => {
 searchBarClick();
 
 const findPlanets = (input) => {
-  
     let request = new XMLHttpRequest();
     request.addEventListener("load", lastXhrCallIPromise);
     request.addEventListener("error", doesNotWork);
